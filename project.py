@@ -367,10 +367,6 @@ def _SafeExpandPath(base, subpath, skipfinal=False):
 
     path = base
     for part in components:
-        if part in {".", ".."}:
-            raise ManifestInvalidPathError(
-                f'{subpath}: "{part}" not allowed in paths'
-            )
 
         path = os.path.join(path, part)
         if platform_utils.islink(path):
