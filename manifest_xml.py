@@ -2147,30 +2147,8 @@ https://gerrit.googlesource.com/git-repo/+/HEAD/docs/manifest-format.md
         # use parts to look for individual bad components.
         parts = resep.split(path.rstrip("/"))
 
-        # Some people use src="." to create stable links to projects.  Lets
-        # allow that but reject all other uses of "." to keep things simple.
-        if not cwd_dot_ok or parts != ["."]:
-            for part in set(parts):
-                if part in {".", "..", ".git"} or part.startswith(".repo"):
-                    return f"bad component: {part}"
-
         if not dir_ok and resep.match(path[-1]):
             return "dirs not allowed"
-
-        # NB: The two abspath checks here are to handle platforms with multiple
-        # filesystem path styles (e.g. Windows).
-        norm = os.path.normpath(path)
-        if (
-            norm == ".."
-            or (
-                len(norm) >= 3
-                and norm.startswith("..")
-                and resep.match(norm[0])
-            )
-            or os.path.isabs(norm)
-            or norm.startswith("/")
-        ):
-            return "path cannot be outside"
 
     @classmethod
     def _ValidateFilePaths(cls, element, src, dest):
